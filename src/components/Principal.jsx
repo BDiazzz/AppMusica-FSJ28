@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import imagen1 from "../assets/imagen1.webp";
 import imagen2 from "../assets/imagen2.jpg";
@@ -452,6 +453,29 @@ const Hamburger = styled.div`
   }
 `;
 
+const Dropdown = styled.div`
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: var(--background-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  padding: 0.5rem 1rem;
+  z-index: 10;
+
+  button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export default function Principal() {
 
   const location = useLocation();
@@ -467,7 +491,14 @@ export default function Principal() {
     scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });
   };
 
+  const [open, setOpen] = useState(false);
+  const toggleMenu = () => setOpen(!open);
   const [menuOpen, setMenuOpen] = useState(null); 
+  const navigate = useNavigate(); 
+
+    const cerrarSesion = () => {
+    navigate("/");
+  };
 
   // Determina si es móvil basado en el ancho de pantalla
   const isMobile = window.innerWidth < 768;
@@ -538,15 +569,20 @@ export default function Principal() {
                 <span>Instalar aplicación</span>
               </section>
               <section>
-                <i class="bi bi-bell" title="Novedades"></i>
+                <i className="bi bi-bell" title="Novedades"></i>
               </section>
               <section>
-                <i class="bi bi-people-fill" title="Actividad de amigos"></i>
+                <i className="bi bi-people-fill" title="Actividad de amigos"></i>
               </section>
             </IconosYInstall>
-            <User>
+            <User onClick={toggleMenu}>
               <i className="bi bi-person-circle" />
               {nombreUsuario}
+              {open && (
+                <Dropdown>
+                  <button onClick={cerrarSesion}>Cerrar sesión</button>
+                </Dropdown>
+                )}
             </User>
           </ConjuntoBtn>
         </Navbar>
